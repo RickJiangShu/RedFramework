@@ -11,10 +11,6 @@ using UnityEngine;
 /// </summary>
 public class RedFramework
 {
-    #region 常量
-
-    #endregion
-
     /// <summary>
     /// 框架入口
     /// </summary>
@@ -31,5 +27,13 @@ public class RedFramework
         //创建Canvas
         GameObject canvas = new GameObject(UIManager.NAME);
         canvas.AddComponent<UIManager>().Set(uiSettings);
+        GameObject.DontDestroyOnLoad(canvas);
+
+#if TEST
+        //创建GM命令输入
+        GameObject gmInput = new GameObject("GMInput");
+        gmInput.AddComponent<GMInput>();
+        GameObject.DontDestroyOnLoad(gmInput);
+#endif
     }
 }
