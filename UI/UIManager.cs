@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// GameObject的Layer
     /// </summary>
-    private const int UI_LAYER_IN_SCENE = 5;
+    private const int UNITY_UI_LAYER = 5;
 
     /// <summary>
     /// 层级之间的距离（米）
@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 分辨率
     /// </summary>
-    private static Vector2 resolution;
+    public static Vector2 resolution = Vector2.zero;
 
     /// <summary>
     /// 层级（建议：0 为最下层 1 UI层 3 Panel层 5 模型层 7 为最上层）
@@ -45,6 +45,9 @@ public class UIManager : MonoBehaviour
     
     void Awake()
     {
+        //设置层级
+        gameObject.layer = UNITY_UI_LAYER;
+
         //Canvas
         canvas = gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
@@ -98,8 +101,8 @@ public class UIManager : MonoBehaviour
     {
         resolution = new Vector2(width, height);
 
-        GameObject go = new GameObject(NAME, typeof(RectTransform), typeof(UIManager));
-        go.layer = UI_LAYER_IN_SCENE;
+        GameObject go = new GameObject(NAME, typeof(RectTransform), typeof(UIManager_));
+        go.layer = UNITY_UI_LAYER;
     }
 
 
@@ -138,6 +141,6 @@ public class UIManager : MonoBehaviour
     public static void AddChild(GameObject go, Transform parent)
     {
         go.transform.SetParent(parent, false);
-        go.layer = UI_LAYER_IN_SCENE;
+        go.layer = UNITY_UI_LAYER;
     }
 }
