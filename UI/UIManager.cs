@@ -142,6 +142,18 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 删除某一层所有的子对象
+    /// </summary>
+    /// <param name="layer"></param>
+    public static void RemoveChildren(int layer)
+    {
+        foreach (Transform child in layers[layer])
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+
+    /// <summary>
     /// 从画布坐标转换到世界坐标
     /// </summary>
     /// <returns></returns>
