@@ -14,6 +14,7 @@ using UnityEngine.UI;
 /// </summary>
 public class UIManager : MonoBehaviour
 {
+    #region 常量
     /// <summary>
     /// 名字
     /// </summary>
@@ -28,7 +29,9 @@ public class UIManager : MonoBehaviour
     /// 层级之间的距离（米）
     /// </summary>
     private const float LAYER_DISTANCE = 5f;
+    #endregion
 
+    #region 自身组件
     /// <summary>
     /// 根节点（自身）
     /// </summary>
@@ -36,6 +39,11 @@ public class UIManager : MonoBehaviour
     private static Camera camera;
     private static Canvas canvas;
     private static CanvasScaler scaler;
+    #endregion
+    /// <summary>
+    /// 偏移
+    /// </summary>
+    private static Vector3 offset = Vector3.zero;
 
     /// <summary>
     /// 分辨率
@@ -49,10 +57,11 @@ public class UIManager : MonoBehaviour
     
     void Awake()
     {
+        root = gameObject.AddComponent<RectTransform>();
+
         //设置层级
         gameObject.layer = UNITY_UI_LAYER;
-
-        root = gameObject.AddComponent<RectTransform>();
+        root.position = offset;
 
         //Canvas
         canvas = gameObject.AddComponent<Canvas>();
@@ -64,8 +73,9 @@ public class UIManager : MonoBehaviour
         scaler.referenceResolution = resolution;
 
         //Camera
-        camera = new GameObject("UICamera", typeof(Camera)).GetComponent<Camera>();
-        AddChild(camera.gameObject, transform);
+        camera = new GameObject("UICamera").AddComponent<Camera>();
+        AddChild(camera.gameObject, root);
+        camera.clearFlags = CameraClearFlags.Depth;
         camera.orthographic = true;
         camera.orthographicSize = resolution.y * 0.005f;
         camera.nearClipPlane = 0f;
@@ -153,11 +163,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
+#region 坐标转换
     /// <summary>
-    /// 从画布坐标转换到世界坐标
+    /// 从主摄像机中的坐标转换到画布坐标
     /// </summary>
     /// <returns></returns>
-    public static Vector3 TransformPoint(Vector3 canvasPosition)
+    public static Vector2 MainCamera2Canvas(Vector3 worldPosition)
+    {
+        Vector2 viewport = Camera.main.WorldToViewportPoint(worldPosition);
+        viewport = (viewport - root.pivot) * 2;
+        float w = root.rect.width * 0.5f;
+        float h = root.rect.height * 0.5f;
+        return new Vector2(viewport.x * w, viewport.y * h);
+    }
+
+    /// <summary>
+    /// 从画布坐标转换到主摄像机中的坐标
+    /// </summary>
+    /// <returns></returns>
+    public static Vector3 Canvas2MainCamera(Vector2 canvasPosition)
     {
         float w = root.rect.width * 0.5f;
         float h = root.rect.height * 0.5f;
@@ -166,15 +190,22 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 从世界坐标转换到画布坐标
+    /// 世界坐标转换为相对于Canvas坐标
     /// </summary>
     /// <returns></returns>
-    public static Vector3 InverseTransformPoint(Vector3 worldPosition)
+    public static Vector2 World2Canvas(Vector2 position)
     {
-        Vector2 viewport = Camera.main.WorldToViewportPoint(worldPosition);
-        viewport = (viewport - root.pivot) * 2;
-        float w = root.rect.width * 0.5f;
-        float h = root.rect.height * 0.5f;
-        return new Vector2(viewport.x * w, viewport.y * h);
+        return root.InverseTransformPoint(position);
     }
+
+    /// <summary>
+    /// 相对于Canavs坐标转换为世界坐标
+    /// </summary>
+    /// <param name="localPosition"></param>
+    /// <returns></returns>
+    public static Vector2 Canvas2World(Vector2 localPosition)
+    {
+        return root.TransformPoint(localPosition);
+    }
+#endregion
 }

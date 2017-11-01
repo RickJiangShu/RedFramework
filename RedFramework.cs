@@ -33,5 +33,7 @@ public class RedFramework
         UIManager.resolution.y = resolutionY;
         GameObject canvas = new GameObject(UIManager.NAME);
         canvas.AddComponent<UIManager>();
+
+        canvas.transform.position = new Vector3(100f, 0f, 0f);
     }
 }
