@@ -29,6 +29,10 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private const float LAYER_DISTANCE = 5f;
 
+    /// <summary>
+    /// 根节点（自身）
+    /// </summary>
+    private static RectTransform root;
     private static Camera camera;
     private static Canvas canvas;
     private static CanvasScaler scaler;
@@ -39,14 +43,16 @@ public class UIManager : MonoBehaviour
     public static Vector2 resolution = Vector2.zero;
 
     /// <summary>
-    /// 层级（0 UI层 1 Panel层）
+    /// 层级
     /// </summary>
-    private static RectTransform[] layers = new RectTransform[2];
+    private static RectTransform[] layers = new RectTransform[8];
     
     void Awake()
     {
         //设置层级
         gameObject.layer = UNITY_UI_LAYER;
+
+        root = gameObject.AddComponent<RectTransform>();
 
         //Canvas
         canvas = gameObject.AddComponent<Canvas>();
@@ -75,13 +81,13 @@ public class UIManager : MonoBehaviour
 
             container.name = "Layer" + i;
 
-            RectTransform rect = (RectTransform)container.transform;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.localPosition = new Vector3(0f, 0f, -LAYER_DISTANCE * i * 100f);
-            layers[i] = rect;
+            RectTransform layer = (RectTransform)container.transform;
+            layer.offsetMin = Vector2.zero;
+            layer.offsetMax = Vector2.zero;
+            layer.anchorMin = Vector2.zero;
+            layer.anchorMax = Vector2.one;
+            layer.localPosition = new Vector3(0f, 0f, -LAYER_DISTANCE * i * 100f);
+            layers[i] = layer;
         }
     }
 
@@ -95,14 +101,6 @@ public class UIManager : MonoBehaviour
     void Update()
     {
 
-    }
-
-    public static void Instantiate(float width = 768f, float height = 1366f)
-    {
-        resolution = new Vector2(width, height);
-
-        GameObject go = new GameObject(NAME, typeof(RectTransform), typeof(UIManager_));
-        go.layer = UNITY_UI_LAYER;
     }
 
 
@@ -133,7 +131,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="go"></param>
     /// <param name="layer"></param>
-    public static void AddChild(GameObject go, int layer = 1)
+    public static void AddChild(GameObject go, int layer)
     {
         AddChild(go, layers[layer]);
     }
@@ -141,6 +139,30 @@ public class UIManager : MonoBehaviour
     public static void AddChild(GameObject go, Transform parent)
     {
         go.transform.SetParent(parent, false);
-        go.layer = UNITY_UI_LAYER;
+    }
+
+    /// <summary>
+    /// 从画布坐标转换到世界坐标
+    /// </summary>
+    /// <returns></returns>
+    public static Vector3 TransformPoint(Vector3 canvasPosition)
+    {
+        float w = root.rect.width * 0.5f;
+        float h = root.rect.height * 0.5f;
+        Vector3 viewport = new Vector3((canvasPosition.x / w + 1f) / 2, (canvasPosition.y / h + 1f) / 2, 0f);
+        return Camera.main.ViewportToWorldPoint(viewport);
+    }
+
+    /// <summary>
+    /// 从世界坐标转换到画布坐标
+    /// </summary>
+    /// <returns></returns>
+    public static Vector3 InverseTransformPoint(Vector3 worldPosition)
+    {
+        Vector2 viewport = Camera.main.WorldToViewportPoint(worldPosition);
+        viewport = (viewport - root.pivot) * 2;
+        float w = root.rect.width * 0.5f;
+        float h = root.rect.height * 0.5f;
+        return new Vector2(viewport.x * w, viewport.y * h);
     }
 }

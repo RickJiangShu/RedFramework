@@ -31,7 +31,7 @@ public class RedFramework
         //创建Canvas
         UIManager.resolution.x = resolutionX;
         UIManager.resolution.y = resolutionY;
-        GameObject canvas = new GameObject(UIManager.NAME, typeof(RectTransform));
+        GameObject canvas = new GameObject(UIManager.NAME);
         canvas.AddComponent<UIManager>();
     }
 }
