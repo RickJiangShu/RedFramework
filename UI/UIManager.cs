@@ -39,9 +39,9 @@ public class UIManager : MonoBehaviour
     public static Vector2 resolution = Vector2.zero;
 
     /// <summary>
-    /// 层级（建议：0 为最下层 1 UI层 3 Panel层 5 模型层 7 为最上层）
+    /// 层级（0 UI层 1 Panel层）
     /// </summary>
-    private static RectTransform[] layers = new RectTransform[8];
+    private static RectTransform[] layers = new RectTransform[2];
     
     void Awake()
     {
@@ -133,7 +133,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="go"></param>
     /// <param name="layer"></param>
-    public static void AddChild(GameObject go, int layer)
+    public static void AddChild(GameObject go, int layer = 1)
     {
         AddChild(go, layers[layer]);
     }

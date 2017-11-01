@@ -21,8 +21,12 @@ public class RedFramework
     public static void Start(float resolutionX = 768f ,float resolutionY = 1366f)
     {
         //启动Warehouser
+        Warehouser.Start();
 
         //启动ConfigManager
+        SerializableSet set = Warehouser.GetAsset<SerializableSet>("SerializableSet");
+        Deserializer.Deserialize(set);
+        Warehouser.UnloadAsset(set);
 
         //创建Canvas
         UIManager.resolution.x = resolutionX;
