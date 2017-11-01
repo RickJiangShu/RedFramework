@@ -60,6 +60,8 @@ public class UIManager : MonoBehaviour
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.matchWidthOrHeight = 1f;
 
+        GraphicRaycaster raycaster = gameObject.AddComponent<GraphicRaycaster>();
+
         //Camera
         camera = new GameObject("UICamera").AddComponent<Camera>();
         AddChild(camera.gameObject, root);
