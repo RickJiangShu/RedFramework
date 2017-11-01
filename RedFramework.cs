@@ -18,7 +18,7 @@ public class RedFramework
     /// <summary>
     /// 框架入口
     /// </summary>
-    public static void Start(float resolutionX = 768f ,float resolutionY = 1366f)
+    public static void Start(UISettings uiSettings)
     {
         //启动Warehouser
         Warehouser.Start();
@@ -29,11 +29,7 @@ public class RedFramework
         Warehouser.UnloadAsset(set);
 
         //创建Canvas
-        UIManager.resolution.x = resolutionX;
-        UIManager.resolution.y = resolutionY;
         GameObject canvas = new GameObject(UIManager.NAME);
-        canvas.AddComponent<UIManager>();
-
-        canvas.transform.position = new Vector3(100f, 0f, 0f);
+        canvas.AddComponent<UIManager>().Set(uiSettings);
     }
 }

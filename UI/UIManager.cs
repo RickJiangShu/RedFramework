@@ -41,16 +41,6 @@ public class UIManager : MonoBehaviour
     private static CanvasScaler scaler;
     #endregion
     /// <summary>
-    /// 偏移
-    /// </summary>
-    private static Vector3 offset = Vector3.zero;
-
-    /// <summary>
-    /// 分辨率
-    /// </summary>
-    public static Vector2 resolution = Vector2.zero;
-
-    /// <summary>
     /// 层级
     /// </summary>
     private static RectTransform[] layers = new RectTransform[8];
@@ -61,7 +51,6 @@ public class UIManager : MonoBehaviour
 
         //设置层级
         gameObject.layer = UNITY_UI_LAYER;
-        root.position = offset;
 
         //Canvas
         canvas = gameObject.AddComponent<Canvas>();
@@ -70,14 +59,12 @@ public class UIManager : MonoBehaviour
         scaler = gameObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.matchWidthOrHeight = 1f;
-        scaler.referenceResolution = resolution;
 
         //Camera
         camera = new GameObject("UICamera").AddComponent<Camera>();
         AddChild(camera.gameObject, root);
         camera.clearFlags = CameraClearFlags.Depth;
         camera.orthographic = true;
-        camera.orthographicSize = resolution.y * 0.005f;
         camera.nearClipPlane = 0f;
         camera.farClipPlane = LAYER_DISTANCE * layers.Length + 0.3f;
         camera.transform.localPosition = new Vector3(0f, 0f, -LAYER_DISTANCE * layers.Length * 100f);
@@ -99,6 +86,14 @@ public class UIManager : MonoBehaviour
             layer.localPosition = new Vector3(0f, 0f, -LAYER_DISTANCE * i * 100f);
             layers[i] = layer;
         }
+    }
+
+    public void Set(UISettings settings)
+    {
+        scaler.referenceResolution = settings.resolution;
+        camera.orthographicSize = scaler.referenceResolution.y * 0.005f;
+
+        root.position = settings.offset;
     }
 
     // Use this for initialization
