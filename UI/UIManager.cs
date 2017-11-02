@@ -32,14 +32,22 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region 自身组件
-    /// <summary>
-    /// 根节点（自身）
-    /// </summary>
     private static RectTransform root;
     private static Camera camera;
     private static Canvas canvas;
     private static CanvasScaler scaler;
+    private static GraphicRaycaster raycaster;
     #endregion
+
+    /// <summary>
+    /// 整个UI是否可交互
+    /// </summary>
+    public static bool interactable
+    {
+        get { return raycaster.enabled; }
+        set { raycaster.enabled = value; }
+    }
+
     /// <summary>
     /// 层级
     /// </summary>
@@ -60,7 +68,7 @@ public class UIManager : MonoBehaviour
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.matchWidthOrHeight = 1f;
 
-        GraphicRaycaster raycaster = gameObject.AddComponent<GraphicRaycaster>();
+        raycaster = gameObject.AddComponent<GraphicRaycaster>();
 
         //Camera
         camera = new GameObject("UICamera").AddComponent<Camera>();
@@ -122,7 +130,8 @@ public class UIManager : MonoBehaviour
         HUDText hudText;
         if (go == null)
         {
-            hudText = HUDText.Instantiate();
+            go = new GameObject("HUDText", typeof(RectTransform));
+            hudText = go.AddComponent<HUDText>();
         }
         else
         {
@@ -158,6 +167,15 @@ public class UIManager : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
+    }
+
+    /// <summary>
+    /// 获取某一层下的某个对象
+    /// </summary>
+    /// <returns></returns>
+    public static Transform GetChild(int layer, int index)
+    {
+        return layers[layer].GetChild(index);
     }
 
 #region 坐标转换

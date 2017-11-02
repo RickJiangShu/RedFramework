@@ -26,10 +26,11 @@ public class GMInput : MonoBehaviour
 
     public void OnGUI()
     {
+        GUI.SetNextControlName("GMInput");
         Rect position = new Rect(Screen.width * 0.5f - 100, 100, 200, 20);
         input = GUI.TextField(position, input);
 
-        if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
+        if (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "GMInput")
         {
             Submit();
         }

@@ -11,6 +11,13 @@ using UnityEngine;
 /// </summary>
 public class RedFramework
 {
+    public static void Start()
+    {
+        Start(
+            UISettings.GetDefault()
+            );
+    }
+
     /// <summary>
     /// 框架入口
     /// </summary>

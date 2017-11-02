@@ -19,7 +19,6 @@ public class HUDText : MonoBehaviour
     private Text text;
     private Shadow shadow;
 
-
     void Awake()
     {
         text = gameObject.AddComponent<Text>();
@@ -47,19 +46,5 @@ public class HUDText : MonoBehaviour
     void Update()
     {
 
-    }
-
-    /// <summary>
-    /// 实例化
-    /// </summary>
-    /// <returns></returns>
-    public static HUDText Instantiate()
-    {
-        GameObject go = new GameObject(NAME,typeof(RectTransform));
-
-#if OBSERVER
-        go.AddComponent<Plugins.Warehouser.Observer.Observer>();
-#endif
-        return go.AddComponent<HUDText>();
     }
 }
