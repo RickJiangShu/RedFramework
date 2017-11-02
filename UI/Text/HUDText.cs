@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 /// <summary>
 /// head-up display 头顶显示的文本（如飘学）
@@ -19,9 +20,13 @@ public class HUDText : MonoBehaviour
     private Text text;
     private Shadow shadow;
 
+    private int step = 0;//阶段 0 未开始 1 缩放出场 2 上移消失
+
     void Awake()
     {
         text = gameObject.AddComponent<Text>();
+        text.alignment = TextAnchor.MiddleCenter;
+
         shadow = gameObject.AddComponent<Shadow>();
     }
     // Use this for initialization
@@ -30,21 +35,35 @@ public class HUDText : MonoBehaviour
 
     }
 
-    public void SetData(string content)
+    public void Set(string content, HUDSettings settings)
     {
+        //设置配置
+        text.font = settings.font;
+        text.fontSize = settings.fontSize;
+        text.color = settings.color;
 
+        //设置文本
+        text.text = content;
     }
 
-    public void Play()
+    public void Play(HUDSettings settings)
     {
         //出现变大->恢复
+        Sequence queue = DOTween.Sequence();
+
+        queue.Append( transform.DOScale(settings.enterScale, 0.3f));
+        queue.Append( transform.DOScale(1,0.3f));
 
         //向上飘渐隐
+        float toY = transform.localPosition.y + 50f;
+        queue.Append(transform.DOLocalMoveY(toY, 0.5f));
+        queue.Join(text.DOFade(0f, 0.5f));
+
+        queue.Play().OnComplete(OnCompelte);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCompelte()
     {
-
+        Destroy(gameObject);
     }
 }

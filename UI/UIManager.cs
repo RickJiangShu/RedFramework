@@ -72,8 +72,10 @@ public class UIManager : MonoBehaviour
 
         //Camera
         camera = new GameObject("UICamera").AddComponent<Camera>();
-        AddChild(camera.gameObject, root);
+        camera.gameObject.layer = UNITY_UI_LAYER;
+        camera.transform.SetParent(root, false);
         camera.clearFlags = CameraClearFlags.Depth;
+        camera.cullingMask = 1 << UNITY_UI_LAYER;
         camera.orthographic = true;
         camera.nearClipPlane = 0f;
         camera.farClipPlane = LAYER_DISTANCE * layers.Length + 0.3f;
@@ -84,7 +86,8 @@ public class UIManager : MonoBehaviour
         for (int i = 0, l = layers.Length; i < l; i++)
         {
             GameObject container = new GameObject(name, typeof(RectTransform));
-            AddChild(container, transform);
+            container.layer = UNITY_UI_LAYER;
+            container.transform.SetParent(root, false);
 
             container.name = "Layer" + i;
 
@@ -118,19 +121,22 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public static void HUD(int layer, string content, Vector3 target)
+    {
+        HUD(layer, content, target, HUDSettings.GetDefault());
+    }
 
     /// <summary>
     /// 显示HUDText
     /// </summary>
-    /// <param name="content"></param>
-    /// <param name="?"></param>
-    public static void ShowHUDText(string content,Vector3 worldPosition)
+    public static void HUD(int layer, string content, Vector3 target, HUDSettings settings)
     {
         GameObject go = Warehouser.Pull(HUDText.NAME);
         HUDText hudText;
         if (go == null)
         {
             go = new GameObject("HUDText", typeof(RectTransform));
+            go.layer = UNITY_UI_LAYER;
             hudText = go.AddComponent<HUDText>();
         }
         else
@@ -138,8 +144,15 @@ public class UIManager : MonoBehaviour
             hudText = go.GetComponent<HUDText>();
         }
 
-        AddChild(hudText.gameObject, 2);
-       // hudText.SetData(content);
+        //设置位置
+        go.transform.localPosition = MainCamera2Canvas(target) + settings.enterOffset;
+
+        //添加到UI层
+        AddChild(hudText.gameObject, layer);
+
+        //设置并播放
+        hudText.Set(content, settings);
+        hudText.Play(settings);
     }
 
     /// <summary>
@@ -147,14 +160,9 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="go"></param>
     /// <param name="layer"></param>
-    public static void AddChild(GameObject go, int layer)
+    public static void AddChild(GameObject go, int layer, bool worldPositionStays = false)
     {
-        AddChild(go, layers[layer]);
-    }
-
-    public static void AddChild(GameObject go, Transform parent)
-    {
-        go.transform.SetParent(parent, false);
+        go.transform.SetParent(layers[layer], worldPositionStays);
     }
 
     /// <summary>
