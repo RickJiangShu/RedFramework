@@ -27,6 +27,10 @@ public class HUDText : MonoBehaviour
         text = gameObject.AddComponent<Text>();
         text.alignment = TextAnchor.MiddleCenter;
 
+        ContentSizeFitter fitter = gameObject.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
         shadow = gameObject.AddComponent<Shadow>();
     }
     // Use this for initialization
@@ -35,12 +39,12 @@ public class HUDText : MonoBehaviour
 
     }
 
-    public void Set(string content, HUDSettings settings)
+    public void Set(string content, int fontSize, Color color, Vector3 target, HUDSettings settings)
     {
         //设置配置
         text.font = settings.font;
-        text.fontSize = settings.fontSize;
-        text.color = settings.color;
+        text.fontSize = fontSize;
+        text.color = color;
 
         //设置文本
         text.text = content;
@@ -51,19 +55,21 @@ public class HUDText : MonoBehaviour
         //出现变大->恢复
         Sequence queue = DOTween.Sequence();
 
-        queue.Append( transform.DOScale(settings.enterScale, 0.3f));
-        queue.Append( transform.DOScale(1,0.3f));
+        queue.Append( transform.DOScale(settings.enterScale, settings.enterDuration * 0.5f));
+        queue.Append( transform.DOScale(1, settings.enterDuration * 0.5f));
 
         //向上飘渐隐
-        float toY = transform.localPosition.y + 50f;
-        queue.Append(transform.DOLocalMoveY(toY, 0.5f));
-        queue.Join(text.DOFade(0f, 0.5f));
+        Vector3 exitPos = transform.localPosition;
+        exitPos.x += settings.exitOffset.x;
+        exitPos.y += settings.exitOffset.y;
+        queue.Append(transform.DOLocalMove(exitPos, settings.exitDuration));
+        queue.Join(text.DOFade(0f, settings.exitDuration));
 
-        queue.Play().OnComplete(OnCompelte);
+        queue.OnComplete(OnCompelte);
     }
 
     private void OnCompelte()
     {
-        Destroy(gameObject);
+        Warehouser.Push(gameObject);
     }
 }

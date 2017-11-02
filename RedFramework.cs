@@ -49,11 +49,7 @@ public class RedFramework
         {
             if (_defaultUI == null)
             {
-                _defaultUI = new UISettings()
-                {
-                    resolution = new Vector2(768f, 1366f),
-                    offset = Vector2.zero,
-                };
+                _defaultUI = new UISettings();
             }
             return _defaultUI.Value;
         }
@@ -66,14 +62,7 @@ public class RedFramework
         {
             if (_defaultHUD == null)
             {
-                _defaultHUD = new HUDSettings()
-                {
-                    font = Resources.GetBuiltinResource<Font>("Arial.ttf"),
-                    fontSize = 14,
-                    color = Color.black,
-
-                    enterScale = 2,
-                };
+                _defaultHUD = new HUDSettings();
             }
             return _defaultHUD.Value;
         }

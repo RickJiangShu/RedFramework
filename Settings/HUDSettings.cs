@@ -7,17 +7,20 @@
 using UnityEngine;
 
 /// <summary>
-/// HUDSettings
+/// HUD面板配置
 /// </summary>
 public struct HUDSettings
 {
+    public int layer;//层级
+
     //字体设置
     public Font font;
-    public int fontSize;
-    public Color color;
 
     //出场（缩放）设置
     public float enterScale;
+    public float enterDuration;
 
     //退出（移动）设置
+    public Vector2 exitOffset;
+    public float exitDuration;
 }
