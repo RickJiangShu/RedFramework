@@ -123,7 +123,7 @@ public class UIManager : MonoBehaviour
 
     public static void HUD(int layer, string content, Vector3 target)
     {
-        HUD(layer, content, target, HUDSettings.GetDefault());
+        HUD(layer, content, target, RedFramework.defaultHUD);
     }
 
     /// <summary>
@@ -145,7 +145,7 @@ public class UIManager : MonoBehaviour
         }
 
         //设置位置
-        go.transform.localPosition = MainCamera2Canvas(target) + settings.enterOffset;
+        go.transform.localPosition = MainCamera2Canvas(target) + new Vector2(0f, 100f);
 
         //添加到UI层
         AddChild(hudText.gameObject, layer);
