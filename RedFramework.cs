@@ -26,16 +26,16 @@ public class RedFramework
         //启动ConfigManager
         SerializableSet set = Warehouser.GetAsset<SerializableSet>("SerializableSet");
         Deserializer.Deserialize(set);
-        Warehouser.UnloadAsset(set);
+        Warehouser.Unload("base/config.ab", true);
 
         //创建Canvas
-        GameObject canvas = new GameObject(UIManager.NAME);
+        GameObject canvas = Warehouser.NewObject(UIManager.NAME);
         canvas.AddComponent<UIManager>().Set(ui);
         GameObject.DontDestroyOnLoad(canvas);
 
-    #if TEST
+    #if UNITY_EDITOR || DEVELOPMENT_BUILD
         //创建GM命令输入
-        GameObject gmInput = new GameObject("GMInput");
+        GameObject gmInput = Warehouser.NewObject("GMInput");
         gmInput.AddComponent<GMInput>();
         GameObject.DontDestroyOnLoad(gmInput);
     #endif
