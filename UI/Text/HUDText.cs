@@ -24,6 +24,8 @@ public class HUDText : MonoBehaviour
 
     void Awake()
     {
+        gameObject.layer = LayerMask.NameToLayer("UI");
+
         text = gameObject.AddComponent<Text>();
         text.alignment = TextAnchor.MiddleCenter;
 

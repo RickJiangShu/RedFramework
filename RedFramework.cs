@@ -15,11 +15,20 @@ public class RedFramework
     {
         Start(defaultUI);
     }
+
+    /// <summary>
+    /// 配置文件
+    /// </summary>
+    public static RedFrameworkSettings settings;
+
     /// <summary>
     /// 框架入口
     /// </summary>
     public static void Start(UISettings ui)
     {
+        //加载配置
+        settings = Resources.Load<RedFrameworkSettings>("RedFrameworkSettings");
+
         //启动Warehouser
         Warehouser.Start();
 
@@ -27,6 +36,11 @@ public class RedFramework
         SerializableSet set = Warehouser.GetAsset<SerializableSet>("SerializableSet");
         Deserializer.Deserialize(set);
         Warehouser.Unload("base/config.ab", true);
+
+        //创建摄像机
+        GameObject cameraController = Warehouser.NewObject("CameraController");
+        cameraController.AddComponent<CameraController>();
+        GameObject.DontDestroyOnLoad(cameraController);
 
         //创建Canvas
         GameObject canvas = Warehouser.NewObject(UIManager.NAME);

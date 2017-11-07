@@ -71,7 +71,7 @@ public class UIManager : MonoBehaviour
         raycaster = gameObject.AddComponent<GraphicRaycaster>();
 
         //Camera
-        camera = new GameObject("UICamera").AddComponent<Camera>();
+        camera = Warehouser.NewObject("UICamera").AddComponent<Camera>();
         camera.gameObject.layer = UNITY_UI_LAYER;
         camera.transform.SetParent(root, false);
         camera.clearFlags = CameraClearFlags.Depth;
@@ -85,11 +85,9 @@ public class UIManager : MonoBehaviour
         //Instantiate Containers
         for (int i = 0, l = layers.Length; i < l; i++)
         {
-            GameObject container = new GameObject(name, typeof(RectTransform));
+            GameObject container = Warehouser.NewObject("Layer" + i, typeof(RectTransform));
             container.layer = UNITY_UI_LAYER;
             container.transform.SetParent(root, false);
-
-            container.name = "Layer" + i;
 
             RectTransform layer = (RectTransform)container.transform;
             layer.offsetMin = Vector2.zero;
@@ -126,18 +124,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public static void HUD(string content, int fontSize, Color color, Vector3 target, HUDSettings settings)
     {
-        GameObject go = Warehouser.Pull(HUDText.NAME);
-        HUDText hudText;
-        if (go == null)
-        {
-            go = new GameObject("HUDText", typeof(RectTransform));
-            go.layer = UNITY_UI_LAYER;
-            hudText = go.AddComponent<HUDText>();
-        }
-        else
-        {
-            hudText = go.GetComponent<HUDText>();
-        }
+        GameObject go = Warehouser.GetObject(HUDText.NAME, typeof(RectTransform), typeof(HUDText));
+        HUDText hudText = go.GetComponent<HUDText>();
 
         //设置位置
         go.transform.localPosition = MainCamera2Canvas(target) + new Vector2(0f, 100f);
@@ -170,15 +158,6 @@ public class UIManager : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
-    }
-
-    /// <summary>
-    /// 获取某一层下的某个对象
-    /// </summary>
-    /// <returns></returns>
-    public static Transform GetChild(int layer, int index)
-    {
-        return layers[layer].GetChild(index);
     }
 
 #region 坐标转换
