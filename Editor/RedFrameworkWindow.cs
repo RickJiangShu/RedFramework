@@ -46,7 +46,7 @@ public class RedFrameworkWindow : EditorWindow
         SerializedProperty camera = serializedSettings.FindProperty("camera");
         EditorGUILayout.PropertyField(camera, true);
 
-        SerializedProperty ui = serializedSettings.FindProperty("ui");
+        SerializedProperty ui = serializedSettings.FindProperty("UI");
         EditorGUILayout.PropertyField(ui, true);
 
         if (GUI.changed)

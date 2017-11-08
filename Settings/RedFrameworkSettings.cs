@@ -17,7 +17,7 @@ public class RedFrameworkSettings : ScriptableObject
     /// <summary>
     /// UI设置
     /// </summary>
-    public UISettings ui;
+    public UISettings UI;
 
     /// <summary>
     /// 相机设置

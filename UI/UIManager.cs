@@ -67,14 +67,14 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         //索引配置
-        for (int i = 0, l = RedFramework.settings.ui.panels.Length; i < l; i++)
+        for (int i = 0, l = RedFramework.settings.UI.panels.Length; i < l; i++)
         {
-            PanelSettings settings = RedFramework.settings.ui.panels[i];
+            PanelSettings settings = RedFramework.settings.UI.panels[i];
             panelSettings[settings.name] = settings;
         }
 
         root = gameObject.AddComponent<RectTransform>();
-        root.position = RedFramework.settings.ui.offset;
+        root.position = RedFramework.settings.UI.offset;
 
         //设置层级
         gameObject.layer = UNITY_UI_LAYER;
@@ -85,7 +85,7 @@ public class UIManager : MonoBehaviour
 
         scaler = gameObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = RedFramework.settings.ui.resolution;
+        scaler.referenceResolution = RedFramework.settings.UI.resolution;
         scaler.matchWidthOrHeight = 1f;
 
         raycaster = gameObject.AddComponent<GraphicRaycaster>();
@@ -137,10 +137,15 @@ public class UIManager : MonoBehaviour
     /// 显示面板
     /// </summary>
     /// <param name="name"></param>
-    public static void ShowPanel(string name)
+    public static GameObject ShowPanel(string name)
     {
+#if UNITY_EDITOR
+        if (!panelSettings.ContainsKey(name))
+            Debug.LogError("UIManager：找不到 " + name + " 的PanelSettings！");
+#endif
+
         PanelSettings settings = panelSettings[name];
-        
+
         //加载依赖图集
         foreach (string atlasName in settings.preloadAtlases)
         {
@@ -154,8 +159,9 @@ public class UIManager : MonoBehaviour
         else 
             panel = Warehouser.Instantiate(name);
 
-        AddChild(panel, RedFramework.settings.ui.panelLayer);
+        AddChild(panel, RedFramework.settings.UI.panelLayer);
         panels.Add(name, panel);
+        return panel;
     }
 
     public static void HidePanel(string name)
