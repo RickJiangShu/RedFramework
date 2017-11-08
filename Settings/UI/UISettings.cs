@@ -14,5 +14,6 @@ public struct UISettings
     public Vector2 resolution;
     public Vector3 offset;
 
-    public PanelSettings[] pannels;
+    public int panelLayer;
+    public PanelSettings[] panels;
 }

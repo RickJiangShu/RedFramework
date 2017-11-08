@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 /// <summary>
@@ -52,9 +53,26 @@ public class UIManager : MonoBehaviour
     /// 层级
     /// </summary>
     private static RectTransform[] layers = new RectTransform[8];
-    
+
+    /// <summary>
+    /// 面板设置
+    /// </summary>
+    private static Dictionary<string, PanelSettings> panelSettings = new Dictionary<string, PanelSettings>();
+
+    /// <summary>
+    /// 所有当前存在的面板
+    /// </summary>
+    private static Dictionary<string, GameObject> panels = new Dictionary<string,GameObject>();
+
     void Awake()
     {
+        //索引配置
+        for (int i = 0, l = RedFramework.settings.ui.panels.Length; i < l; i++)
+        {
+            PanelSettings settings = RedFramework.settings.ui.panels[i];
+            panelSettings[settings.name] = settings;
+        }
+
         root = gameObject.AddComponent<RectTransform>();
         root.position = RedFramework.settings.ui.offset;
 
@@ -113,6 +131,67 @@ public class UIManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    /// <summary>
+    /// 显示面板
+    /// </summary>
+    /// <param name="name"></param>
+    public static void ShowPanel(string name)
+    {
+        PanelSettings settings = panelSettings[name];
+        
+        //加载依赖图集
+        foreach (string atlasName in settings.preloadAtlases)
+        {
+            Warehouser.GetAsset<SpriteAtlas>(atlasName);
+        }
+
+        //
+        GameObject panel;
+        if(settings.recyclable)
+            panel = Warehouser.GetInstance(name);
+        else 
+            panel = Warehouser.Instantiate(name);
+
+        AddChild(panel, RedFramework.settings.ui.panelLayer);
+        panels.Add(name, panel);
+    }
+
+    public static void HidePanel(string name)
+    {
+        PanelSettings settings = panelSettings[name];
+        
+        GameObject panel = panels[name];
+        if (settings.recyclable)
+            Warehouser.Push(panel);
+        else
+            GameObject.Destroy(panel);
+
+        panels.Remove(name);
+    }
+
+    /// <summary>
+    /// 获取某个界面
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static GameObject GetPanel(string name)
+    {
+        return panels[name];
+    }
+
+    /// <summary>
+    /// 隐藏所有界面
+    /// </summary>
+    public static void HideAllPanels()
+    {
+        string[] names = new string[panels.Count];
+        panels.Keys.CopyTo(names, 0);
+        foreach (string name in names)
+        {
+            HidePanel(name);
+        }
     }
 
     /// <summary>
