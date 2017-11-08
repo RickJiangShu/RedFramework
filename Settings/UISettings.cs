@@ -8,8 +8,11 @@ using UnityEngine;
 /// <summary>
 /// UI设置
 /// </summary>
+[System.Serializable]
 public struct UISettings 
 {
     public Vector2 resolution;
     public Vector3 offset;
+
+    public PanelSettings[] pannels;
 }

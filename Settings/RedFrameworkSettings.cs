@@ -15,7 +15,13 @@ using UnityEngine;
 public class RedFrameworkSettings : ScriptableObject
 {
     /// <summary>
+    /// UI设置
+    /// </summary>
+    public UISettings ui;
+
+    /// <summary>
     /// 相机设置
     /// </summary>
     public CameraSettings camera;
+
 }

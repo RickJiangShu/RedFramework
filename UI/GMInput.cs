@@ -30,10 +30,21 @@ public class GMInput : MonoBehaviour
         Rect position = new Rect(0, Screen.height - 20, Screen.width, 20);
         input = GUI.TextField(position, input);
 
-        if (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "GMInput")
+        if (!Application.isMobilePlatform)
         {
-            Submit();
+            if (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "GMInput")
+            {
+                Submit();
+            }
         }
+        else
+        {
+            if (GUI.changed)
+            {
+                Submit();
+            }
+        }
+        
     }
 
     public void Submit()

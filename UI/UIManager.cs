@@ -56,6 +56,7 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         root = gameObject.AddComponent<RectTransform>();
+        root.position = RedFramework.settings.ui.offset;
 
         //设置层级
         gameObject.layer = UNITY_UI_LAYER;
@@ -66,6 +67,7 @@ public class UIManager : MonoBehaviour
 
         scaler = gameObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = RedFramework.settings.ui.resolution;
         scaler.matchWidthOrHeight = 1f;
 
         raycaster = gameObject.AddComponent<GraphicRaycaster>();
@@ -81,6 +83,7 @@ public class UIManager : MonoBehaviour
         camera.farClipPlane = LAYER_DISTANCE * layers.Length + 0.3f;
         camera.transform.localPosition = new Vector3(0f, 0f, -LAYER_DISTANCE * layers.Length * 100f);
         canvas.worldCamera = camera;
+        camera.orthographicSize = scaler.referenceResolution.y * 0.005f;
 
         //Instantiate Containers
         for (int i = 0, l = layers.Length; i < l; i++)
@@ -99,13 +102,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Set(UISettings settings)
-    {
-        scaler.referenceResolution = settings.resolution;
-        camera.orthographicSize = scaler.referenceResolution.y * 0.005f;
-
-        root.position = settings.offset;
-    }
 
     // Use this for initialization
     void Start()

@@ -34,13 +34,20 @@ public class RedFrameworkWindow : EditorWindow
         LoadSettings();
     }
 
+    void OnFocus()
+    {
+        LoadSettings();
+    }
+    
+
     void OnGUI()
     {
         //Camera
-        GUILayout.Label("Camera", EditorStyles.boldLabel);
-
         SerializedProperty camera = serializedSettings.FindProperty("camera");
         EditorGUILayout.PropertyField(camera, true);
+
+        SerializedProperty ui = serializedSettings.FindProperty("ui");
+        EditorGUILayout.PropertyField(ui, true);
 
         if (GUI.changed)
         {

@@ -11,11 +11,6 @@ using UnityEngine;
 /// </summary>
 public class RedFramework
 {
-    public static void Start()
-    {
-        Start(defaultUI);
-    }
-
     /// <summary>
     /// 配置文件
     /// </summary>
@@ -24,7 +19,7 @@ public class RedFramework
     /// <summary>
     /// 框架入口
     /// </summary>
-    public static void Start(UISettings ui)
+    public static void Start()
     {
         //加载配置
         settings = Resources.Load<RedFrameworkSettings>("RedFrameworkSettings");
@@ -44,7 +39,7 @@ public class RedFramework
 
         //创建Canvas
         GameObject canvas = Warehouser.NewObject(UIManager.NAME);
-        canvas.AddComponent<UIManager>().Set(ui);
+        canvas.AddComponent<UIManager>();
         GameObject.DontDestroyOnLoad(canvas);
 
     #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -56,18 +51,6 @@ public class RedFramework
     }
 
     #region 默认配置
-    private static UISettings? _defaultUI;
-    public static UISettings defaultUI
-    {
-        get
-        {
-            if (_defaultUI == null)
-            {
-                _defaultUI = new UISettings();
-            }
-            return _defaultUI.Value;
-        }
-    }
 
     private static HUDSettings? _defaultHUD;
     public static HUDSettings defaultHUD
