@@ -22,6 +22,11 @@ public struct UISettings
     public Vector3 offset;
 
     /// <summary>
+    /// 需要预加载的图集
+    /// </summary>
+    public string[] preloadAtlases;
+
+    /// <summary>
     /// 面板层
     /// </summary>
     public int panelLayer;

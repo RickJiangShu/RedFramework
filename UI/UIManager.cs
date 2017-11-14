@@ -124,6 +124,7 @@ public class UIManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+      //  Warehouser.GetAsset<SpriteAtlas>("CommonAtlas");
         
     }
 
@@ -149,6 +150,7 @@ public class UIManager : MonoBehaviour
         //加载依赖图集
         foreach (string atlasName in settings.preloadAtlases)
         {
+            Debug.Log("Atlas:" + atlasName);
             Warehouser.GetAsset<SpriteAtlas>(atlasName);
         }
 
