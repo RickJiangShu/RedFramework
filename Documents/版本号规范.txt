@@ -1,0 +1,5 @@
+版本号（e.g. 1.3.r21.201711091137）
+框架版本（Framework Version）：当引擎、插件或框架进行修改时，由开发人员手动递增；
+逻辑版本（Logic Version）：当核心和模块进行修改时，由开发人员手动递增；
+资源版本（Resource Version）：自动更新
+编译时间（Build Time）

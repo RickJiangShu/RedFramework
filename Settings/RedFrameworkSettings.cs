@@ -24,4 +24,5 @@ public class RedFrameworkSettings : ScriptableObject
     /// </summary>
     public CameraSettings camera;
 
+
 }

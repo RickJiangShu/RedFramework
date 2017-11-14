@@ -49,20 +49,4 @@ public class RedFramework
         GameObject.DontDestroyOnLoad(gmInput);
     #endif
     }
-
-    #region 默认配置
-
-    private static HUDSettings? _defaultHUD;
-    public static HUDSettings defaultHUD
-    {
-        get
-        {
-            if (_defaultHUD == null)
-            {
-                _defaultHUD = new HUDSettings();
-            }
-            return _defaultHUD.Value;
-        }
-    }
-    #endregion
 }

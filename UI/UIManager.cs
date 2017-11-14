@@ -203,8 +203,11 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 显示HUDText
     /// </summary>
-    public static void HUD(string content, int fontSize, Color color, Vector3 target, HUDSettings settings)
+    public static void HUD(string content, int fontSize, Color color, Vector3 target, int settingsIndex)
     {
+        //HUD配置
+        HUDSettings settings = RedFramework.settings.UI.HUD[settingsIndex];
+
         GameObject go = Warehouser.GetObject(HUDText.NAME, typeof(RectTransform), typeof(HUDText));
         HUDText hudText = go.GetComponent<HUDText>();
 
@@ -212,7 +215,7 @@ public class UIManager : MonoBehaviour
         go.transform.localPosition = MainCamera2Canvas(target) + new Vector2(0f, 100f);
 
         //添加到UI层
-        AddChild(hudText.gameObject, settings.layer);
+        AddChild(hudText.gameObject, RedFramework.settings.UI.hudLayer);
 
         //设置并播放
         hudText.Set(content, fontSize, color, target, settings);

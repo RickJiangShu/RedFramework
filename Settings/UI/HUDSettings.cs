@@ -9,10 +9,9 @@ using UnityEngine;
 /// <summary>
 /// HUD面板配置
 /// </summary>
-public struct HUDSettings
+[System.Serializable]
+public class HUDSettings
 {
-    public int layer;//层级
-
     //字体设置
     public Font font;
 
