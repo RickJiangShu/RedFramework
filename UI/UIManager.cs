@@ -187,6 +187,21 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 屏幕坐标转换到相对于Canvas坐标
+    /// </summary>
+    /// <returns></returns>
+    public static Vector2 Screen2Canvas(Vector2 position)
+    {
+        Vector2 world = camera.ScreenToWorldPoint(position);
+        return World2Canvas(world);
+    }
+
+    public static Vector2 Canvas2Screen(Vector2 position)
+    {
+        return Vector2.zero;
+    }
+
+    /// <summary>
     /// 世界坐标转换为相对于Canvas坐标
     /// </summary>
     /// <returns></returns>
@@ -204,5 +219,6 @@ public class UIManager : MonoBehaviour
     {
         return root.TransformPoint(localPosition);
     }
+
 #endregion
 }
