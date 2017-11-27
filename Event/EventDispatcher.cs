@@ -46,10 +46,6 @@ public class EventDispatcher
     {
         AddListener(evt, (Delegate)callback);
     }
-    public void AddListener(string evt, object callback)
-    {
-    }
-
     public void AddListener(string evt, Delegate callback)
     {
         Delegate listener;
