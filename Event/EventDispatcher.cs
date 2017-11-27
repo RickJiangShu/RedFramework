@@ -96,42 +96,57 @@ public class EventDispatcher
 
     public void Dispatch<T1, T2, T3, T4>(string evt, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
     {
-        Delegate listener;
-        if (_listeners.TryGetValue(evt, out listener))
+        Dispatch(evt, delegate(Delegate method)
         {
-            ((Action<T1, T2, T3, T4>)listener)(arg1, arg2, arg3, arg4);
-        }
+            ((Action<T1, T2, T3, T4>)method)(arg1, arg2, arg3, arg4);
+        });
     }
     public void Dispatch<T1, T2, T3>(string evt, T1 arg1, T2 arg2, T3 arg3)
     {
-        Delegate listener;
-        if (_listeners.TryGetValue(evt, out listener))
+        Dispatch(evt, delegate(Delegate method)
         {
-            ((Action<T1, T2, T3>)listener)(arg1, arg2, arg3);
-        }
+            ((Action<T1, T2, T3>)method)(arg1, arg2, arg3);
+        });
     }
     public void Dispatch<T1, T2>(string evt, T1 arg1, T2 arg2)
     {
-        Delegate listener;
-        if (_listeners.TryGetValue(evt, out listener))
+        Dispatch(evt, delegate(Delegate method)
         {
-            ((Action<T1, T2>)listener)(arg1, arg2);
-        }
+            ((Action<T1, T2>)method)(arg1, arg2);
+        });
     }
     public void Dispatch<T>(string evt, T arg)
     {
-        Delegate listener;
-        if (_listeners.TryGetValue(evt, out listener))
+        Dispatch(evt, delegate(Delegate method)
         {
-            ((Action<T>)listener)(arg);
-        }
+            ((Action<T>)method)(arg);
+        });
     }
     public void Dispatch(string evt)
+    {
+        Dispatch(evt, delegate(Delegate method)
+        {
+            ((Action)method)();
+        });
+    }
+
+    private void Dispatch(string evt, Action<Delegate> Invoke)
     {
         Delegate listener;
         if (_listeners.TryGetValue(evt, out listener))
         {
-            ((Action)listener)();
+            Delegate[] methods = listener.GetInvocationList();
+            foreach (Delegate m in methods)
+            {
+                try
+                {
+                    Invoke(m);
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogError(e);
+                }
+            }
         }
     }
 }
