@@ -71,7 +71,7 @@ public class UIManager : MonoBehaviour
         raycaster = gameObject.AddComponent<GraphicRaycaster>();
 
         //Camera
-        camera = Warehouser.NewObject("UICamera").AddComponent<Camera>();
+        camera = new GameObject("UICamera").AddComponent<Camera>();
         camera.gameObject.layer = UNITY_UI_LAYER;
         camera.transform.SetParent(root, false);
         camera.clearFlags = CameraClearFlags.Depth;
@@ -85,7 +85,7 @@ public class UIManager : MonoBehaviour
         //Instantiate Containers
         for (int i = 0, l = layers.Length; i < l; i++)
         {
-            GameObject container = Warehouser.NewObject("Layer" + i, typeof(RectTransform));
+            GameObject container = new GameObject("Layer" + i, typeof(RectTransform));
             container.layer = UNITY_UI_LAYER;
             container.transform.SetParent(root, false);
 

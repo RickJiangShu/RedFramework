@@ -72,6 +72,6 @@ public class HUDText : MonoBehaviour
 
     private void OnCompelte()
     {
-        Warehouser.Push(gameObject);
+        ObjectPool.global.Push(gameObject);
     }
 }

@@ -38,18 +38,18 @@ public class RedFramework
         Warehouser.Unload("base/config.ab", true);
 
         //创建摄像机
-        GameObject cameraController = Warehouser.NewObject("CameraController");
+        GameObject cameraController = new GameObject("CameraController");
         cameraController.AddComponent<CameraController>();
         GameObject.DontDestroyOnLoad(cameraController);
 
         //创建Canvas
-        GameObject canvas = Warehouser.NewObject(UIManager.NAME);
+        GameObject canvas = new GameObject(UIManager.NAME);
         canvas.AddComponent<UIManager>().Set(ui);
         GameObject.DontDestroyOnLoad(canvas);
 
     #if UNITY_EDITOR || DEVELOPMENT_BUILD
         //创建GM命令输入
-        GameObject gmInput = Warehouser.NewObject("GMInput");
+        GameObject gmInput = new GameObject("GMInput");
         gmInput.AddComponent<GMInput>();
         GameObject.DontDestroyOnLoad(gmInput);
     #endif
