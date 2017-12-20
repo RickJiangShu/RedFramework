@@ -28,7 +28,8 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 层级之间的距离（米）
     /// </summary>
-    private const float LAYER_DISTANCE = 5f;
+    private const float _layerDinstanceInterval = 5f;
+
     #endregion
 
     #region 自身组件
@@ -37,6 +38,8 @@ public class UIManager : MonoBehaviour
     private static Canvas canvas;
     private static CanvasScaler scaler;
     private static GraphicRaycaster raycaster;
+
+    private static GameObject _panelMask;
     #endregion
 
     /// <summary>
@@ -48,8 +51,11 @@ public class UIManager : MonoBehaviour
         set { raycaster.enabled = value; }
     }
 
+
+    private static int[] _layerOrders = new int[8] { 0, 8, 16, 24, 32, 40, 48, 56 };
+
     /// <summary>
-    /// 层级
+    /// 层级 
     /// </summary>
     private static RectTransform[] layers = new RectTransform[8];
     
@@ -78,8 +84,8 @@ public class UIManager : MonoBehaviour
         camera.cullingMask = 1 << UNITY_UI_LAYER;
         camera.orthographic = true;
         camera.nearClipPlane = 0f;
-        camera.farClipPlane = LAYER_DISTANCE * layers.Length + 0.3f;
-        camera.transform.localPosition = new Vector3(0f, 0f, -LAYER_DISTANCE * layers.Length * 100f);
+        camera.farClipPlane = _layerDinstanceInterval * layers.Length + 0.3f;
+        camera.transform.localPosition = new Vector3(0f, 0f, -_layerDinstanceInterval * layers.Length * 100f);
         canvas.worldCamera = camera;
 
         //Instantiate Containers
@@ -94,8 +100,17 @@ public class UIManager : MonoBehaviour
             layer.offsetMax = Vector2.zero;
             layer.anchorMin = Vector2.zero;
             layer.anchorMax = Vector2.one;
-            layer.localPosition = new Vector3(0f, 0f, -LAYER_DISTANCE * i * 100f);
+            layer.localPosition = new Vector3(0f, 0f, -_layerDinstanceInterval * i * 100f);
             layers[i] = layer;
+
+            if (i == 0)
+                continue;
+
+            //设置排序Canvas（主要针对粒子）
+            Canvas sortedCanvas = layers[i].gameObject.AddComponent<Canvas>();
+            sortedCanvas.overrideSorting = true;
+            sortedCanvas.sortingOrder = _layerOrders[i];
+            sortedCanvas.gameObject.AddComponent<GraphicRaycaster>();
         }
     }
 
@@ -131,11 +146,18 @@ public class UIManager : MonoBehaviour
         go.transform.localPosition = MainCamera2Canvas(target) + new Vector2(0f, 100f);
 
         //添加到UI层
-        AddChild(hudText.gameObject, settings.layer);
+        AddChild(hudText.gameObject, UILayer.BelowMainUI);
 
         //设置并播放
         hudText.Set(content, fontSize, color, target, settings);
         hudText.Play(settings);
+    }
+
+    public static void AddPanel(GameObject go, bool setChildrenOrders = false)
+    {
+        //遮罩处理
+
+        AddChild(go,UILayer.Panel,false,setChildrenOrders);
     }
 
     /// <summary>
@@ -143,9 +165,20 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="go"></param>
     /// <param name="layer"></param>
-    public static void AddChild(GameObject go, int layer, bool worldPositionStays = false)
+    public static void AddChild(GameObject go, UILayer layer, 
+        bool worldPositionStays = false, 
+        bool setChildrenOrders = false)
     {
-        go.transform.SetParent(layers[layer], worldPositionStays);
+        if (setChildrenOrders)
+        {
+            Renderer[] renderers = go.GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                renderers[i].sortingOrder = _layerOrders[(int)layer];
+            }
+        }
+
+        go.transform.SetParent(layers[(int)layer], worldPositionStays);
     }
 
     /// <summary>
@@ -219,6 +252,17 @@ public class UIManager : MonoBehaviour
     {
         return root.TransformPoint(localPosition);
     }
-
 #endregion
+}
+
+public enum UILayer
+{
+    Limbo = 0,
+    BelowMainUI = 1,
+    MainUI = 2,
+    AboveMainUI = 3,
+    BelowPanel = 4,
+    Panel = 5,
+    AbovePanel = 6,
+    Sky = 7
 }
