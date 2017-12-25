@@ -51,7 +51,9 @@ public class UIManager : MonoBehaviour
         set { raycaster.enabled = value; }
     }
 
-
+    /// <summary>
+    /// 层级对应的Order
+    /// </summary>
     private static int[] _layerOrders = new int[8] { 0, 8, 16, 24, 32, 40, 48, 56 };
 
     /// <summary>
@@ -158,6 +160,15 @@ public class UIManager : MonoBehaviour
         //遮罩处理
 
         AddChild(go,UILayer.Panel,false,setChildrenOrders);
+    }
+
+    public static void SetOrders(GameObject go, UILayer layer)
+    {
+        Renderer[] renderers = go.GetComponentsInChildren<Renderer>();
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].sortingOrder = _layerOrders[(int)layer];
+        }
     }
 
     /// <summary>
