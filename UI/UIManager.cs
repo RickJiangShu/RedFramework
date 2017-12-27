@@ -196,9 +196,9 @@ public class UIManager : MonoBehaviour
     /// 删除某一层所有的子对象
     /// </summary>
     /// <param name="layer"></param>
-    public static void RemoveChildren(int layer)
+    public static void RemoveChildren(UILayer layer)
     {
-        foreach (Transform child in layers[layer])
+        foreach (Transform child in layers[(int)layer])
         {
             GameObject.Destroy(child.gameObject);
         }
